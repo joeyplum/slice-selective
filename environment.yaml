@@ -1,0 +1,10 @@
+name: slice-selective
+channels:
+- conda-forge
+dependencies:
+- python=3.10
+- numpy>=1.20.0
+- scipy
+- pip
+- matplotlib
+- jupyter
