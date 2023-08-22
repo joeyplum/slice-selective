@@ -12,7 +12,7 @@ except:
     np.save("rf_default.npy", rf)
 
 try:
-    gz = np.load("gz_default.npy")
+    gz = np.load("gz_bloch.npy")
 except:
     print("Could not load the g(z) pulse. Run and save the pulse shape from rf_bloch_simulation.py.")
 
@@ -22,15 +22,56 @@ z = np.linspace(-1.5*TH, 1.5*TH, len(gz))
 
 # Plot
 plt.figure(1, figsize=(10, 14))
-plt.subplot(211)
+plt.subplot(311)
 plt.plot(rf)
 plt.grid(True)
 plt.xlabel('time (ms)')
 plt.ylabel('RF (mT)')
 plt.title('RF Pulse')
 
-plt.subplot(212)
+plt.subplot(312)
 plt.plot(z, gz, 'r.')
 plt.grid(True)
-plt.xlabel('time (ms)')
-plt.ylabel('RF (mT)')
+plt.xlabel('z (mm)')
+plt.ylabel('g(z) from Bloch Simulations (mT)')
+
+# Update z to use FFT of RF pulse (the correct way)
+pad_width = 5000
+rf_padded = np.pad(rf, pad_width=pad_width)
+gz = abs(np.fft.fftshift(np.fft.fft(rf_padded)))
+
+np.save("gz_philips.npy", gz)
+
+# Find the peak's maximum value and index
+max_index = np.argmax(gz)
+peak_maximum = gz[max_index]
+
+# Calculate half maximum value
+half_maximum = peak_maximum / 2
+
+# Find the indices where data crosses half maximum value
+left_idx = np.argmin(np.abs(gz[:max_index] - half_maximum))
+right_idx = max_index + np.argmin(np.abs(gz[max_index:] - half_maximum))
+
+# Calculate FWHM, and normalize z to it
+fwhm_index = right_idx-left_idx
+fwhm = TH
+z_res = fwhm/fwhm_index  # mm occupied by each z point
+z = np.linspace(-len(rf_padded)*z_res//2, len(rf_padded)
+                * z_res//2, len(rf_padded))
+
+# Trim the variables for better visualization
+factor = 0.9
+gz = gz[int(pad_width*factor):-int(pad_width*factor)]
+z = z[int(pad_width*factor):-int(pad_width*factor)]
+
+print("FWHM:", fwhm)
+print("Indices of FWHM:", left_idx, right_idx)
+
+# Plot the data and FWHM region
+plt.subplot(313)
+plt.plot(z, gz, 'm')
+plt.xlabel('z')
+plt.ylabel('g(z) from FFT(RF)')
+plt.grid(True)
+plt.show()

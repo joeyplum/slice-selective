@@ -7,8 +7,8 @@ plt.style.use('default')
 # %% Input settings
 
 # Settings
-fa_applied = 30  # degrees
-n_excitations = 28  # number of excitations/spiral interleaves
+fa_applied = 25.16  # degrees
+n_excitations = 29  # number of excitations/spiral interleaves
 TH = 15  # mm, slice thickness
 m_0 = 1  # a.u., initial magnetization
 
@@ -187,7 +187,7 @@ ax1.set_ylabel(r"Signal $\int s_n(z) dz$", size=16)
 ax1.legend(
     ("Non-selective", "Slice-selective \n (gapped)", "Slice-selective \n (contiguous slices)"), fontsize=12)
 
-n
+
 # %% Range of flip angles
 
 # Range of flip angles
