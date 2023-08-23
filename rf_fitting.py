@@ -37,7 +37,7 @@ plt.ylabel('g(z) from Bloch Simulations', fontsize=16)
 plt.annotate("FOR VISUAL \nPURPOSES ONLY", xy=(10, 0.8), fontsize=18)
 
 # Update z to use FFT of RF pulse (the correct way)
-pad_width = 5000
+pad_width = 1000
 rf_padded = np.pad(rf, pad_width=pad_width)
 gz = abs(np.fft.fftshift(np.fft.fft(rf_padded)))
 
