@@ -7,7 +7,7 @@ plt.style.use('default')
 # %% Input settings
 
 # Settings
-fa_applied = 30  # degrees
+fa_applied = 20  # degrees
 n_excitations = 28  # number of excitations/spiral interleaves
 TH = 15  # mm, slice thickness
 m_0 = 1  # a.u., initial magnetization
