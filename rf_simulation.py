@@ -50,14 +50,15 @@ n_mesh, z_mesh = np.meshgrid(n, z)
 M_0 = m_0 * np.ones_like(n_mesh)
 
 # Plot gz
-fig = plt.figure(figsize=(10, 10))
-ax1 = fig.add_subplot(2, 2, 1)
+fig = plt.figure(figsize=(6, 20), constrained_layout=True)
+ax1 = fig.add_subplot(4, 1, 1)
 ax1.plot(z, gz_ideal, 'k-', label="Slice selective (ideal)")
 ax1.plot(z, gz, 'k--', label="Slice-selective (real)")
 ax1.set_title('g(z) slice-select profile', size=16)
 ax1.set_xlabel(r'$z$', size=16)
 ax1.set_ylabel(r'$g(z)$', size=16)
 ax1.set_ylim((0, 1.25))
+ax1.set_aspect(35)
 ax1.legend(fontsize=12, loc="upper right")
 
 
@@ -95,32 +96,32 @@ def s_n_contiguous(gz, fa):
 
 
 # Surface plot
-ax2 = fig.add_subplot(2, 2, 2, projection='3d')
+ax2 = fig.add_subplot(4, 1, 2, projection='3d')
 ax2.set_box_aspect(aspect=None, zoom=0.9)
-ax2.plot_surface(z_mesh, n_mesh, s_n_gapped(gz=gz_non_selective, fa=fa_applied), cmap=cm.jet,
+ax2.plot_surface(z_mesh, n_mesh, s_n_gapped(gz=gz_ideal, fa=fa_applied), cmap=cm.jet,
                  linewidth=0, antialiased=False)
 ax2.set_ylim([n_excitations, 0])
-ax2.set_title("Non-selective", size=16)
+ax2.set_title("Slice-selective \n(ideal)", size=16)
 ax2.set_xlabel("$z$", size=16)
 ax2.set_ylabel("$n$", size=16)
 ax2.set_zlabel(r"$M_{xy}$", size=16)
 
-ax3 = fig.add_subplot(2, 2, 3, projection='3d')
+ax3 = fig.add_subplot(4, 1, 3, projection='3d')
 ax3.set_box_aspect(aspect=None, zoom=0.9)
 ax3.plot_surface(z_mesh, n_mesh, s_n_gapped(gz=gz, fa=fa_applied), cmap=cm.jet,
                  linewidth=0, antialiased=False)
 ax3.set_ylim([n_excitations, 0])
-ax3.set_title("Slice-selective (gapped)", size=16)
+ax3.set_title("Slice-selective \n(gapped)", size=16)
 ax3.set_xlabel("$z$", size=16)
 ax3.set_ylabel("$n$", size=16)
 ax3.set_zlabel(r"$M_{xy}$", size=16)
 
-ax4 = fig.add_subplot(2, 2, 4, projection='3d')
+ax4 = fig.add_subplot(4, 1, 4, projection='3d')
 ax4.set_box_aspect(aspect=None, zoom=0.9)
 ax4.plot_surface(z_mesh, n_mesh, s_n_contiguous(gz=gz, fa=fa_applied), cmap=cm.jet,
                  linewidth=0, antialiased=False)
 ax4.set_ylim([n_excitations, 0])
-ax4.set_title("Slice-selective (contiguous)", size=16)
+ax4.set_title("Slice-selective \n(contiguous)", size=16)
 ax4.set_xlabel("$z$", size=16)
 ax4.set_ylabel("$n$", size=16)
 ax4.set_zlabel(r"$M_{xy}$", size=16)
@@ -221,7 +222,37 @@ ax2.text(0.05, 0.5, r"$FA_{app} = \phi \times FA_{meas}$",
                     size=16)
 
 
+# %% For the paper
+
+# Visualize
+fig, (ax1, ax2) = plt.subplots(figsize=(14, 6),
+                               nrows=1, ncols=2)
+# Do not include the first excitation
+ax1.plot(n, s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied)),
+         'k-', label="Slice-selective \n(ideal)")
+ax1.plot(n, s_n_mean_z(s_n_gapped(gz=gz, fa=fa_applied)),
+         'ko-', label="Slice-selective \n(gapped)")
+ax1.plot(n, s_n_mean_z(s_n_contiguous(gz=gz, fa=fa_applied)),
+         'k--', label="Slice-selective \n(contiguous)")
+# ax1.set_title("Signal dynamics", size=16)
+ax1.set_xlabel(r"Excitation number $n$", size=16)
+ax1.set_ylabel(r"Signal $\int s_n(z) dz$", size=16)
+ax1.legend(fontsize=16)
+
+ax2.plot(fa_range, fa_meas_gapped, 'ko-', label=r"Gapped")
+ax2.plot(fa_range, fa_meas_contiguous, 'k*--', label=r"Contiguous")
+ax2.plot(fa_range, fa_range, 'k-', label="Applied flip angle")
+# ax2.set_title(r"$cos^{-1}(S_2/S_1)^{2/N_s}$ vs. True", size=16)
+ax2.set_xlabel("Applied flip angle (degrees)", size=16)
+ax2.set_ylabel("Measured flip angle (degrees)", size=16)
+ax2.legend(fontsize=14)
+# ax2.text(0.05, 0.6, r"$FA_{app} = \phi \times FA_{meas}$",
+#                     transform=ax2.transAxes,
+#                     bbox=dict(facecolor='white', alpha=0.5),
+#                     size=16)
+
 # %% Simulate the correction process
+
 
 def integral_gapped(x, gz):
     integrand = np.zeros_like(gz)
