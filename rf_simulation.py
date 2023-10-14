@@ -8,7 +8,7 @@ plt.style.use('default')
 
 # Settings
 fa_applied = 25  # degrees
-n_excitations = 28  # number of excitations/spiral interleaves
+n_excitations = 28*2  # number of excitations/spiral interleaves
 TH = 15  # mm, slice thickness
 m_0 = 1  # a.u., initial magnetization
 
@@ -138,7 +138,6 @@ def s_n_mean_z(s_n):
 # Visualize
 fig, (ax1) = plt.subplots(figsize=(7, 7),
                           nrows=1, ncols=1)
-# Do not include the first excitation
 ax1.plot(n, s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied)),
          'k-', label="Slice-selective \n(ideal)")
 ax1.plot(n, s_n_mean_z(s_n_gapped(gz=gz, fa=fa_applied)),
@@ -148,6 +147,24 @@ ax1.plot(n, s_n_mean_z(s_n_contiguous(gz=gz, fa=fa_applied)),
 ax1.set_title("Signal measurements", size=16)
 ax1.set_xlabel(r"Excitation number $n$", size=16)
 ax1.set_ylabel(r"Signal $\int s_n(z) dz$", size=16)
+ax1.legend(fontsize=16)
+
+# NIH talk
+fig, (ax1) = plt.subplots(figsize=(8, 5),
+                          nrows=1, ncols=1)
+ax1.plot(n[:len(n)//2], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[:len(n)//2],
+         'r-*')
+ax1.plot(n[len(n)//2:], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[len(n)//2:],
+         'b-*')
+ax1.plot(n[:len(n)//4], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[:len(n)//4],
+         'r-*', label="First key image")
+ax1.plot(n[len(n)//4:len(n)//2], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[len(n)//4:len(n)//2],
+         'b-*', label="Second key image")
+ax1.plot(n[len(n)//2:], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[len(n)//2:],
+         'w-*')
+ax1.set_title("Signal measurements", size=16)
+ax1.set_xlabel(r"Excitation number $n$", size=16)
+ax1.set_ylabel(r"Signal $s_n$", size=16)
 ax1.legend(fontsize=16)
 
 
