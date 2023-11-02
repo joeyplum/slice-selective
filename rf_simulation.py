@@ -149,7 +149,7 @@ ax1.set_xlabel(r"Excitation number $n$", size=16)
 ax1.set_ylabel(r"Signal $\int s_n(z) dz$", size=16)
 ax1.legend(fontsize=16)
 
-# NIH talk
+# Keyhole visualization (useful for explaining the signal dynamics)
 fig, (ax1) = plt.subplots(figsize=(8, 5),
                           nrows=1, ncols=1)
 ax1.plot(n[:len(n)//2], s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied))[:len(n)//2],
