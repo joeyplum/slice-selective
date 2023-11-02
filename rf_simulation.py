@@ -8,7 +8,7 @@ plt.style.use('default')
 
 # Settings
 fa_applied = 25  # degrees
-n_excitations = 28*2  # number of excitations/spiral interleaves
+n_excitations = 28  # number of excitations/spiral interleaves
 TH = 15  # mm, slice thickness
 m_0 = 1  # a.u., initial magnetization
 
