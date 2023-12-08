@@ -8,7 +8,7 @@ plt.style.use('default')
 
 # Settings
 fa_applied = 25  # degrees
-n_excitations = 28  # number of excitations/spiral interleaves
+n_excitations = 16  # number of excitations/spiral interleaves
 TH = 15  # mm, slice thickness
 m_0 = 1  # a.u., initial magnetization
 
@@ -242,8 +242,8 @@ ax2.text(0.05, 0.5, r"$FA_{app} = \phi \times FA_{meas}$",
 # %% For the paper
 
 # Visualize
-fig, (ax1, ax2) = plt.subplots(figsize=(14, 6),
-                               nrows=1, ncols=2)
+fig, (ax1, ax2, ax3) = plt.subplots(figsize=(21, 6),
+                                    nrows=1, ncols=3)
 # Do not include the first excitation
 ax1.plot(n, s_n_mean_z(s_n_gapped(gz=gz_ideal, fa=fa_applied)),
          'k-', label="Slice-selective \n(ideal)")
@@ -258,15 +258,32 @@ ax1.legend(fontsize=16)
 
 ax2.plot(fa_range, fa_meas_gapped, 'ko-', label=r"Gapped")
 ax2.plot(fa_range, fa_meas_contiguous, 'k*--', label=r"Contiguous")
-ax2.plot(fa_range, fa_range, 'k-', label="Applied flip angle")
+ax2.plot(fa_range, fa_range, 'k-', label=r"Ideal")
 # ax2.set_title(r"$cos^{-1}(S_2/S_1)^{2/N_s}$ vs. True", size=16)
-ax2.set_xlabel("Applied flip angle (degrees)", size=16)
-ax2.set_ylabel("Measured flip angle (degrees)", size=16)
+ax2.set_xlabel(r"Nominal flip angle $\alpha_{nominal}$ (deg)", size=16)
+ax2.set_ylabel(r"Measured flip angle $\alpha_{measured}$ (deg)", size=16)
 ax2.legend(fontsize=14)
 # ax2.text(0.05, 0.6, r"$FA_{app} = \phi \times FA_{meas}$",
 #                     transform=ax2.transAxes,
 #                     bbox=dict(facecolor='white', alpha=0.5),
 #                     size=16)
+
+# Plot polynomial fit
+ax3.plot(fa_meas_gapped, fa_correction_gapped, 'ko',
+         label="Gapped")
+ax3.plot(fa_meas_contiguous, fa_correction_contiguous, 'k*',
+         label="Contiguous")
+ax3.plot(fit_x_gapped, fit_y_gapped, 'm-', label="Poly. fit - gapped")
+ax3.plot(fit_x_contiguous, fit_y_contiguous,
+         'm--', label="Poly. fit - contiguous")
+ax3.legend(fontsize=14)
+# ax3.set_ylim((0.95, 1.45))
+ax3.set_xlabel(r"Measured flip angle $\alpha_{measured}$ (deg)", size=16)
+ax3.set_ylabel(r"$\phi(\alpha_{measured})$", size=16)
+ax3.text(0.05, 0.5, r"$\alpha_{nom} = \phi \times \alpha_{meas}$",
+                    transform=ax3.transAxes,
+                    bbox=dict(facecolor='white', alpha=0.5),
+                    size=16)
 
 # %% Simulate the correction process
 
