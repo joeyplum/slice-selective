@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+print("my name")
 def Rx(flip):
     # rotation matrix about the x-axis
     # Note these are left-handed rotation matrices for MRI
